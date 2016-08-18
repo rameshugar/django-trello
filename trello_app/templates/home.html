@@ -1,0 +1,38 @@
+<script src="https://code.jquery.com/jquery-3.1.0.js" integrity="sha256-slogkvB1K3VOkzAI8QITxV3VzpOnkeNVsKvtkYLMjfk=" crossorigin="anonymous">
+</script>
+
+<script src="https://trello.com/1/client.js?key=64532fa8b37fd8f1183a444dad02df20"></script>
+
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+<script type="text/javascript">
+function AuthenticateTrello() {
+  Trello.authorize({
+    name: "My Trello App",
+    type: "popup",
+    interactive: true,
+    expiration: "never",
+    persist: false,
+    success: function () { onAuthorizeSuccessful(); },
+    scope: { write: true, read: true },
+  });
+}
+function onAuthorizeSuccessful() {
+  var token = Trello.token();
+  window.location.replace("/auth?token=" + token);
+}
+
+</script>
+
+
+{% if user.is_authenticated %}
+  <a href='{% url "logout" %}' class="btn btn-success">Logout</a>
+  <h4>Usernames</h4>
+  <ul>
+  {% for member in members %}
+     <li> {{member.username}} </li>
+  {% endfor %}
+  </ul>
+{% else %}
+<button type="button" class="btn btn-success" onClick="AuthenticateTrello()">Connect to Trello</button>
+{% endif %}
